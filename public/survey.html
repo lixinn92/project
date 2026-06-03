@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>美发工具使用习惯调研</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=Noto+Sans+SC:wght@300;400;500&family=Noto+Sans:wght@300;400;500&family=Noto+Sans+Arabic:wght@300;400;500&family=Noto+Serif:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink: #1a1a2e; --mist: #f4f2ee; --stone: #e8e4dc;
+  --sage: #7a9e87; --sage-l: #eef4f0; --clay: #c4845a; --clay-l: #fdf0e8;
+  --line: #d4cfc7; --text-s: #6b6560; --r: 14px;
+}
+html, body { background: var(--mist); color: var(--ink); min-height: 100vh;
+  font-family: 'Noto Sans SC', 'Noto Sans', sans-serif; font-weight: 300;
+  -webkit-font-smoothing: antialiased; }
+
+/* RTL global */
+[dir="rtl"] { font-family: 'Noto Sans Arabic', 'Noto Sans', sans-serif; }
+[dir="rtl"] .opt-mark { margin-right: 0; margin-left: 12px; }
+[dir="rtl"] .rank-badge { margin-left: 0; margin-right: 8px; }
+[dir="rtl"] .s-divider { border-left: none; border-right: 2.5px solid var(--sage); padding: 0 14px 0 0; }
+[dir="rtl"] .c-num { margin-left: 10px; margin-right: 0; }
+[dir="rtl"] .grid-table th:first-child { text-align: right; padding-right: 20px; padding-left: 6px; }
+[dir="rtl"] .grid-table td:first-child { text-align: right; padding-right: 20px; padding-left: 6px; }
+[dir="rtl"] .lang-btn { font-family: 'Noto Sans Arabic', sans-serif; }
+
+/* ── Language switcher ── */
+.lang-bar {
+  position: fixed; top: 3px; right: 12px; z-index: 200;
+  display: flex; gap: 4px; padding: 5px 0;
+}
+[dir="rtl"] .lang-bar { right: auto; left: 12px; }
+.lang-btn {
+  padding: 4px 9px; border-radius: 20px; border: 1px solid var(--line);
+  background: rgba(244,242,238,.88); backdrop-filter: blur(8px);
+  font-size: 11px; font-weight: 500; color: var(--text-s);
+  cursor: pointer; transition: all .18s; letter-spacing: .02em;
+  -webkit-tap-highlight-color: transparent;
+}
+.lang-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+.lang-btn:active { transform: scale(.94); }
+
+/* ── Progress bar ── */
+#prog-wrap { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 3px; background: var(--stone); }
+#prog-bar { height: 100%; background: var(--sage); transition: width .5s cubic-bezier(.4,0,.2,1); width: 0%; }
+
+/* ── Cover ── */
+.site-header { padding: 56px 28px 0; text-align: center; }
+.site-header .eyebrow { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--sage); margin-bottom: 12px; }
+[dir="rtl"] .site-header .eyebrow { letter-spacing: .04em; }
+.site-header h1 { font-family: 'Noto Serif SC', 'Noto Serif', serif; font-size: 26px; font-weight: 600; line-height: 1.35; color: var(--ink); margin-bottom: 14px; }
+[dir="rtl"] .site-header h1 { font-family: 'Noto Sans Arabic', sans-serif; font-size: 24px; }
+.site-header p { font-size: 13px; color: var(--text-s); line-height: 1.7; max-width: 320px; margin: 0 auto 8px; }
+.site-header .meta { font-size: 12px; color: #aaa; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+.start-btn { display: block; width: calc(100% - 56px); margin: 28px auto 0;
+  background: var(--ink); color: #fff; font-size: 15px; font-weight: 500;
+  padding: 16px; border-radius: var(--r); border: none; cursor: pointer;
+  letter-spacing: .04em; transition: opacity .2s, transform .15s;
+  -webkit-tap-highlight-color: transparent; }
+[dir="rtl"] .start-btn { letter-spacing: 0; font-family: 'Noto Sans Arabic', sans-serif; }
+.start-btn:active { transform: scale(.97); opacity: .88; }
+
+/* ── Survey ── */
+#survey { display: none; padding-bottom: 60px; }
+.q-card { margin: 20px 20px 0; background: #fff; border-radius: var(--r);
+  box-shadow: 0 1px 3px rgba(0,0,0,.06); overflow: hidden;
+  opacity: 0; transform: translateY(18px); transition: opacity .4s ease, transform .4s ease; }
+.q-card.visible { opacity: 1; transform: translateY(0); }
+.q-head { padding: 20px 20px 14px; border-bottom: 1px solid var(--stone); }
+.q-num { font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--sage); font-weight: 500; margin-bottom: 8px; }
+[dir="rtl"] .q-num { letter-spacing: .02em; font-family: 'Noto Sans Arabic', sans-serif; }
+.q-text { font-size: 15.5px; line-height: 1.6; font-weight: 400; color: var(--ink); }
+.q-sub { font-size: 12px; color: var(--text-s); margin-top: 6px; line-height: 1.55; }
+.q-body { padding: 8px 0; }
+
+/* ── Options ── */
+.opt { display: flex; align-items: center; padding: 13px 20px; cursor: pointer;
+  border-bottom: 1px solid var(--stone); transition: background .15s;
+  -webkit-tap-highlight-color: transparent; }
+.opt:last-child { border-bottom: none; }
+.opt:active { background: var(--mist); }
+.opt.selected { background: var(--sage-l); }
+.opt.selected .opt-mark { background: var(--sage); border-color: var(--sage); }
+.opt.selected .opt-mark::after { opacity: 1; }
+.opt-mark { flex-shrink: 0; width: 20px; height: 20px; border: 1.5px solid var(--line);
+  border-radius: 50%; margin-right: 12px; position: relative; transition: all .2s; }
+.opt-mark.square { border-radius: 5px; }
+.opt-mark::after { content: ''; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%); width: 8px; height: 8px;
+  background: #fff; border-radius: 50%; opacity: 0; transition: opacity .2s; }
+.opt-mark.square::after { width: 10px; height: 8px; border-radius: 2px;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 4l3 3 5-6' stroke='white' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat; }
+.opt-label { font-size: 14.5px; color: var(--ink); line-height: 1.45; }
+.opt.selected .opt-label { color: #2d6b4a; font-weight: 400; }
+
+/* ── Scale ── */
+.scale-wrap { padding: 16px 20px 20px; }
+.scale-labels { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-s); margin-bottom: 14px; }
+.scale-dots { display: flex; justify-content: space-between; }
+.scale-dot { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--line);
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+  color: var(--text-s); cursor: pointer; transition: all .2s; -webkit-tap-highlight-color: transparent; }
+.scale-dot:active { transform: scale(.92); }
+.scale-dot.selected { background: var(--sage); border-color: var(--sage); color: #fff; font-weight: 500; box-shadow: 0 3px 8px rgba(122,158,135,.35); }
+
+/* ── Open ── */
+.open-wrap { padding: 12px 20px 20px; }
+.open-wrap textarea { width: 100%; min-height: 88px; border: 1.5px solid var(--line);
+  border-radius: 10px; padding: 12px 14px; resize: none; outline: none;
+  font-family: inherit; font-size: 14px; font-weight: 300; color: var(--ink);
+  background: var(--mist); line-height: 1.6; transition: border-color .2s; direction: inherit; }
+.open-wrap textarea:focus { border-color: var(--sage); background: #fff; }
+.open-wrap textarea::placeholder { color: #bbb; }
+
+/* ── Rank ── */
+.rank-wrap { padding: 8px 0 4px; }
+.rank-item { display: flex; align-items: center; padding: 11px 20px;
+  border-bottom: 1px solid var(--stone); -webkit-tap-highlight-color: transparent; }
+.rank-item:last-child { border-bottom: none; }
+.rank-label { font-size: 13.5px; color: var(--ink); line-height: 1.45; flex: 1; }
+.rank-badge { width: 22px; height: 22px; border-radius: 6px; background: var(--clay);
+  color: #fff; font-size: 12px; font-weight: 500; display: none; align-items: center;
+  justify-content: center; flex-shrink: 0; margin-left: 8px; }
+.rank-badge.show { display: flex; }
+
+/* ── Grid ── */
+.grid-wrap { padding: 0 0 8px; overflow-x: auto; }
+.grid-table { width: 100%; border-collapse: collapse; }
+.grid-table th { font-size: 11px; color: var(--text-s); font-weight: 400; padding: 10px 6px;
+  text-align: center; border-bottom: 1px solid var(--stone); white-space: nowrap; }
+.grid-table th:first-child { text-align: left; padding-left: 20px; width: 38%; }
+.grid-table td { padding: 10px 6px; text-align: center; border-bottom: 1px solid var(--stone); font-size: 12.5px; }
+.grid-table tr:last-child td { border-bottom: none; }
+.grid-table td:first-child { text-align: left; padding-left: 20px; color: var(--ink); font-size: 13px; }
+.grid-dot { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--line);
+  margin: 0 auto; cursor: pointer; transition: all .2s; -webkit-tap-highlight-color: transparent; }
+.grid-dot.selected { background: var(--sage); border-color: var(--sage); }
+
+/* ── Nav ── */
+.nav-bar { position: fixed; bottom: 0; left: 0; right: 0;
+  padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+  background: rgba(244,242,238,.92); backdrop-filter: blur(12px);
+  border-top: 1px solid var(--line); display: flex; gap: 10px; z-index: 99; }
+.nav-bar.hidden { display: none; }
+.btn-prev { flex: 0 0 80px; height: 44px; border-radius: 12px; border: 1.5px solid var(--line);
+  background: transparent; color: var(--text-s); font-size: 13px; font-weight: 500;
+  font-family: inherit; cursor: pointer; letter-spacing: .02em;
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  -webkit-tap-highlight-color: transparent; transition: all .2s; }
+.btn-prev:hover { background: var(--stone); }
+.btn-prev:active { transform: scale(.96); }
+.btn-prev:disabled { opacity: .28; pointer-events: none; }
+.btn-next { flex: 1; height: 44px; border-radius: 12px; background: var(--ink); color: #fff;
+  font-family: inherit; font-size: 14.5px; font-weight: 500; border: none; cursor: pointer;
+  letter-spacing: .04em; -webkit-tap-highlight-color: transparent; transition: opacity .2s, transform .15s; }
+[dir="rtl"] .btn-next { letter-spacing: 0; }
+.btn-next:active { transform: scale(.97); }
+.btn-next:disabled { opacity: .35; }
+.btn-next.highlight { background: var(--sage); }
+
+.step-info { text-align: center; font-size: 11px; color: #bbb; padding: 14px 20px 0; letter-spacing: .05em; }
+[dir="rtl"] .step-info { letter-spacing: 0; }
+.s-divider { margin: 24px 20px 0; padding: 0 0 0 14px; border-left: 2.5px solid var(--sage); }
+.s-divider span { font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--sage); font-weight: 500; }
+[dir="rtl"] .s-divider span { letter-spacing: .02em; }
+
+/* ── Concept ── */
+.concept-card { margin: 20px 20px 0; padding: 20px; background: var(--sage-l);
+  border-radius: var(--r); border: 1px solid #c5dac9;
+  opacity: 0; transform: translateY(18px); transition: opacity .4s ease, transform .4s ease; }
+.concept-card.visible { opacity: 1; transform: translateY(0); }
+.concept-card .c-title { font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--sage); font-weight: 500; margin-bottom: 14px; }
+[dir="rtl"] .concept-card .c-title { letter-spacing: .02em; }
+.concept-card .c-item { display: flex; gap: 10px; margin-bottom: 10px; font-size: 13.5px; line-height: 1.55; color: var(--ink); }
+.concept-card .c-item:last-child { margin-bottom: 0; }
+.concept-card .c-num { flex-shrink: 0; width: 20px; height: 20px; background: var(--sage);
+  color: #fff; border-radius: 50%; font-size: 11px; font-weight: 500;
+  display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+
+/* ── End / Disq ── */
+#end-screen { display: none; padding: 60px 28px 40px; text-align: center; animation: fadeUp .5s ease both; }
+.end-icon { font-size: 52px; margin-bottom: 20px; }
+#end-screen h2 { font-family: 'Noto Serif SC','Noto Serif',serif; font-size: 22px; color: var(--ink); margin-bottom: 12px; }
+[dir="rtl"] #end-screen h2 { font-family: 'Noto Sans Arabic', sans-serif; }
+#end-screen p { font-size: 13.5px; color: var(--text-s); line-height: 1.7; }
+.end-summary { margin-top: 28px; padding: 16px; background: #fff; border-radius: var(--r);
+  text-align: left; font-size: 13px; color: var(--text-s); border: 1px solid var(--stone); }
+[dir="rtl"] .end-summary { text-align: right; }
+.end-summary p { margin-bottom: 4px; }
+.end-summary span { color: var(--ink); font-weight: 400; }
+#disq-screen { display: none; padding: 80px 28px; text-align: center; }
+#disq-screen h2 { font-family: 'Noto Serif SC','Noto Serif',serif; font-size: 20px; margin-bottom: 12px; }
+[dir="rtl"] #disq-screen h2 { font-family: 'Noto Sans Arabic', sans-serif; }
+#disq-screen p { font-size: 13px; color: var(--text-s); line-height: 1.7; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+
+<div id="prog-wrap"><div id="prog-bar"></div></div>
+
+<!-- Language Switcher -->
+<div class="lang-bar" id="lang-bar">
+  <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" onclick="setLang('ar')">عربي</button>
+  <button class="lang-btn" onclick="setLang('ru')">РУС</button>
+</div>
+
+<!-- Cover -->
+<div id="cover">
+  <div class="site-header">
+    <div class="eyebrow" data-i18n="eyebrow"></div>
+    <h1 data-i18n="title"></h1>
+    <p data-i18n="subtitle1"></p>
+    <p data-i18n="subtitle2"></p>
+    <div class="meta" data-i18n="meta"></div>
+  </div>
+  <button class="start-btn" onclick="startSurvey()" data-i18n="start"></button>
+</div>
+
+<div id="disq-screen">
+  <div style="font-size:40px;margin-bottom:16px">🙏</div>
+  <h2 data-i18n="disq_title"></h2>
+  <p data-i18n="disq_body"></p>
+</div>
+
+<div id="survey">
+  <div class="step-info" id="step-info"></div>
+  <div id="q-container"></div>
+  <div style="height:80px"></div>
+</div>
+
+<div class="nav-bar hidden" id="nav-bar">
+  <button class="btn-prev" id="btn-prev" onclick="goPrev()"><span id="prev-arrow">←</span> <span id="prev-label">上一题</span></button>
+  <button class="btn-next" id="btn-next" onclick="goNext()"></button>
+</div>
+
+<div id="end-screen">
+  <div class="end-icon">✨</div>
+  <h2 data-i18n="end_title"></h2>
+  <p data-i18n="end_body"></p>
+  <div class="end-summary" id="summary-box"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// TRANSLATIONS
+// ═══════════════════════════════════════════════
+const T = {
+  zh: {
+    eyebrow:'产品用户研究',
+    title:'你和头发之间\n有什么故事？',
+    subtitle1:'我们在做一款新的美发工具，想先认真听听你的真实体验。',
+    subtitle2:'没有推销，就是聊聊。',
+    meta:'约 15 分钟 · 全程匿名 · 33 道题',
+    start:'开始填写 →',
+    disq_title:'感谢你的参与',
+    disq_body:'本次调研主要面向有美发工具使用习惯的朋友，你目前不在范围内，感谢你抽出时间。',
+    end_title:'谢谢你认真填完',
+    end_body:'你的每一个回答都是真实的声音，\n会直接影响我们做出更好的产品。',
+    end_interest:'产品兴趣评分',
+    end_price:'价格态度',
+    end_followup:'后续参与意愿',
+    end_recorded:'你的完整回答已记录，感谢参与。',
+    next:'下一题',
+    skip:'跳过',
+    submit:'提交问卷 ✓',
+    read_on:'看完了，继续 →',
+    q_label:'问题',
+    of:'/',
+    read_concept:'请阅读以下内容',
+    concept_title:'产品概念描述',
+    concept_items:[
+      ['可换头设计','包含直发丰盈梳、吹风筒和扩散器三个头，满足不同造型需求'],
+      ['康达气流技术','特殊气流让头发顺气流自然贴合梳面，受热均匀，毛鳞片闭合更顺滑'],
+      ['创新梳齿设计','特殊梳齿材料结合精心设计的长度和排列，抓发力强，同时减少缠发和拉扯'],
+      ['智能温度监控','实时感应发丝温度状态，自动调节热量输出，高效造型同时保护发质'],
+      ['等离子护发技术','负离子与等离子协同作用，深层锁水修护受损发丝，提升顺滑度'],
+      ['全球通用电压','支持 100V–240V，任何国家均可直接使用'],
+      ['轻便紧凑','比市面上多数热风梳更轻便，日常和出行都适合携带'],
+    ],
+    dividers:{ 1:'基本信息', 7:'日常护发习惯', 16:'场景与需求', 19:'工具使用体验', 26:'新产品概念', 30:'最后几题' },
+    questions:[
+      { id:'S1', type:'single', text:'你平时有使用美发造型工具的习惯吗？', sub:'比如吹风机、热风梳、卷发棒、直板夹等', required:true,
+        opts:['有，几乎每次洗头后都用','有，每周用几次','偶尔用，视场合而定','很少或几乎从不使用'], disqualify:[3] },
+      { id:'Q1', type:'single', text:'你目前的年龄段是？', required:true,
+        opts:['18–24 岁','25–30 岁','31–35 岁','36–40 岁','41–45 岁','45 岁以上'] },
+      { id:'Q2', type:'single', text:'你目前生活在哪里？', required:true,
+        opts:['中国大陆','中国香港 / 澳门 / 台湾','美国 / 加拿大','欧洲','中东（沙特、UAE 等）','俄罗斯 / 东欧','东南亚','其他'] },
+      { id:'Q3', type:'single', text:'你出差或旅行（过夜）的频率大概是？', required:true,
+        opts:['几乎每周','每月 2–3 次','每月 1 次','每季度 1–2 次','每年几次或更少','基本不出行'] },
+      { id:'Q4L', type:'single', text:'你的头发长度大概是？', required:true,
+        opts:['超短发（耳上）','短发（耳下至下巴）','中短发（下巴至肩膀）','中长发（肩膀至胸口）','长发（胸口以下）'] },
+      { id:'Q5LS', type:'single', text:'你的日常生活状态更接近哪种？', required:true,
+        opts:['每天需要面对客户或公众，形象要求较高（如销售、管理、医疗、教育、服务等）','以办公室或团队协作为主，偶尔有重要会面','主要居家办公或自由职业，外出频率较低','学生','以照顾家庭为主，较少有社交形象场合','其他'] },
+      { id:'Q6HT', type:'multi', text:'你的头发是什么样的？', sub:'可多选，选出最符合你的特征', required:true, max:8, groupLabels:['纹理','发量与发丝','发质状态','化学处理（近一年）'],
+        groups:[0,0,0,0,1,1,1,2,2,2,2,3,3,3,3],
+        opts:['天然直发','自然波浪纹','卷曲（大卷 / 中卷）','紧密小卷','发量少、发丝细软','发量适中','发量多、发丝粗硬','健康有光泽','干燥毛糙、容易飞发','受损（易断、分叉）','头皮容易出油、发根塌','染过色','做过卷烫','做过拉直 / 离子烫','未做过任何化学处理'] },
+      { id:'Q7PW', type:'multi', text:'刚洗完头发自然晾干后，你的头发通常是什么状态？', sub:'可多选', required:true, max:4,
+        opts:['自然顺直，基本不需要整理','有轻微自然弯曲，稍做整理即可','毛糙蓬松，需要工具压下去','卷曲打结，难以梳开','头皮出油快，发根容易塌','干燥缺水，摸起来粗糙'] },
+      { id:'Q8A', type:'single', text:'你每次打理头发（吹干 + 造型）大约花多少时间？', required:true,
+        opts:['5 分钟以内','5–10 分钟','10–20 分钟','20–30 分钟','30 分钟以上'] },
+      { id:'Q8B', type:'single', text:'你觉得这个时间……', required:true,
+        opts:['完全可以接受，不觉得长','有点长，但还能接受','太长了，希望能缩短'] },
+      { id:'Q8C', type:'single', text:'最主要的难点是？', required:false, showIf:{qid:'Q8B',values:[1,2]},
+        opts:['吹干太慢，头发太厚 / 太长','造型效果难达到预期，需要反复','工具操作麻烦，不顺手','早上时间太紧，根本不够用','其他'] },
+      { id:'Q9A', type:'single', text:'你多久会自己在家认真做一次头发造型（不只是随意吹干）？', required:true,
+        opts:['几乎每天','每周 2–3 次','每周 1 次','有重要场合才做','很少，觉得自己做不好 / 太麻烦'] },
+      { id:'Q9B', type:'multi', text:'自己在家造型时，最主要的难点是？', sub:'可多选', required:false, max:3,
+        opts:['造型工具效果不好，做不出想要的效果','操作太复杂，需要一定技巧','太花时间，坚持不下去','容易烫到头皮或损伤发质','效果维持不住，做了也很快散掉','没有明显难点，基本能搞定'] },
+      { id:'Q10', type:'single', text:'你会定期做烫发或离子拉直吗？', required:true,
+        opts:['是，每 3 个月左右','是，每 6 个月左右','偶尔，不固定','从不'] },
+      { id:'Q10B', type:'single', text:'你如何评估自己目前的发质受损情况？', required:true,
+        opts:['发质健康，没有明显受损','轻微受损，偶尔有干燥或分叉','中度受损，毛糙干燥比较明显','较严重受损，断发、分叉、弹性差'] },
+      { id:'Q10C', type:'single', text:'你对日常使用热风工具伤发这件事，有多担心？', required:true,
+        opts:['完全不担心，不是我的顾虑','有一点担心，但不会影响使用习惯','比较担心，会刻意控制使用频率或温度','非常担心，这是我选择工具最重要的考量'] },
+      { id:'Q11', type:'multi', text:'以下场景里，你最在意头发状态的是哪几个？', sub:'可多选，最多 3 项', required:true, max:3,
+        opts:['普通工作日出门','重要会议 / 客户见面','约会 / 重要社交场合','周末出行 / 聚会','出差 / 商务旅行','休闲旅行 / 度假','居家不出门'] },
+      { id:'Q12', type:'grid', text:'在以下场景中，头发打理的困扰程度如何？', sub:'每行选一项', required:true,
+        rows:['普通工作日','重要会议 / 商务场合','约会 / 重要社交场合','出差 / 商务旅行','休闲旅行 / 度假'],
+        cols:['没困扰','轻微','较明显','非常困扰'] },
+      { id:'Q13', type:'multi', text:'出差或旅行时，你在头发方面最主要的困扰是？', sub:'可多选，最多 3 项', required:false, max:3,
+        opts:['没有合适工具，只能用酒店吹风机','工具太重 / 太占行李空间','国外电压 / 插头不兼容','没时间好好整理','换地方后水质 / 气候变化','直接放弃造型','出行时没有特别困扰'] },
+      { id:'Q14', type:'multi', text:'你目前日常使用哪些美发工具？', sub:'可多选', required:true, max:6,
+        opts:['普通吹风机','高速吹风机（如追觅、徕芬等）','热风梳 / 热风刷','热风造型套装（多头可换，如 Shark FlexStyle 等）','Dyson Airwrap / Supersonic','卷发棒（手动）','自动卷发棒 / 懒人卷发器','直板夹 / 离子夹','负离子梳 / 电热梳','基本不用工具','其他'] },
+      { id:'QPUR', type:'multi', text:'你买美发工具主要是为了？', sub:'最多选 2 项', required:true, max:2,
+        opts:['日常快速打理，省时省力','做出精致造型，效果专业','保护发质，减少损伤','出行携带，轻便好用','一机多用，减少工具数量'] },
+      { id:'QPREF1', type:'single', text:'如果现在要购买一款热风造型工具，你更倾向于哪种？', required:true,
+        opts:['多功能但精简的套装——可换头设计，直发、卷发造型一机搞定','简单易用的热风梳——操作方便，专注日常打理','还没想好，要看具体产品再决定'] },
+      { id:'QPREF2', type:'single', text:'如果选择热风梳，你更需要哪种？', required:true,
+        opts:['直发梳——梳齿排列紧密，主要用于拉直、顺滑和打造蓬松感','椭圆梳——圆筒设计，主要用于打造自然卷翘、发尾弧度和增加发量丰盈感','两种都想要','不确定，需要更多了解'] },
+      { id:'Q17', type:'single', text:'购买美发工具时，你最看重哪一点？', required:true,
+        opts:['造型效果好、持久','操作简单、不需技巧','对头发损伤小','轻便，适合携带出行','多功能，一个顶多个','性价比高','品牌口碑和评价'] },
+      { id:'Q18', type:'open', text:'你觉得目前用的美发工具，最希望改进什么？', sub:'请用自己的话描述', required:false },
+      { id:'CONCEPT', type:'concept', text:'', required:false },
+      { id:'Q19', type:'scale', text:'对这款产品的整体兴趣程度如何？', left:'完全不感兴趣', right:'非常感兴趣', points:5, required:true },
+      { id:'Q20', type:'rank', text:'以下 7 个产品特点，请按吸引力从高到低排序', sub:'点击数字按钮后再点击对应选项完成排序', required:true,
+        opts:['可换头设计（直发梳 / 吹风筒 / 扩散器）','康达气流技术（气流贴合，毛鳞片更顺滑）','创新梳齿（抓发力强 + 减少缠发）','智能温度监控（自动感应调节，保护发质）','等离子护发技术（深层修护，提升顺滑）','全球通用电压（出行随时可用）','轻便紧凑（日常 + 出行都适合）'] },
+      { id:'Q21', type:'multi', text:'对这款产品，你有哪些疑虑？', sub:'可多选，最多 3 项', required:false, max:3,
+        opts:['不确定效果是否比普通热风梳好','担心换头操作麻烦','全球通用电压对我不重要','价格可能超出预算','市面已有类似产品','品牌不熟悉','没有特别疑虑，我很感兴趣'] },
+      { id:'Q22', type:'single', text:'这是一个新兴品牌，套装售价定位在 $160–$200 美元（约 ¥1,150–¥1,450），你的看法是？', required:true,
+        opts:['完全可以接受，愿意购买','略高，但效果好会考虑','偏高，可能等打折再买','超出预算，不会购买','需先看到真实评价再决定'] },
+      { id:'Q23', type:'open', text:'如果你可以告诉做美发工具的人一件事，你最想说什么？', required:false },
+      { id:'Q24', type:'single', text:'你是否愿意参与后续产品试用或深度访谈？', sub:'会有小礼物感谢', required:true,
+        opts:['愿意，请联系我','可能愿意，视情况','暂时不需要'] },
+      { id:'Q25', type:'open', text:'如果愿意参与后续研究，请留下联系方式', sub:'微信 / 邮箱 / 手机，选填', required:false },
+    ]
+  },
+
+  en: {
+    eyebrow:'Product User Research',
+    title:'What\'s your hair story?',
+    subtitle1:'We\'re developing a new hair styling tool and want to hear your real experience first.',
+    subtitle2:'No sales pitch — just a chat.',
+    meta:'About 15 min · Anonymous · 33 questions',
+    start:'Start Survey →',
+    disq_title:'Thank You',
+    disq_body:'This survey is for people who regularly use hair styling tools. You don\'t quite fit the criteria — thanks so much for your time.',
+    end_title:'Thank you for completing the survey!',
+    end_body:'Every answer you gave is a real voice\nthat will directly shape a better product.',
+    end_interest:'Product Interest Score',
+    end_price:'Price Attitude',
+    end_followup:'Follow-up Willingness',
+    end_recorded:'Your full responses have been recorded. Thank you for participating.',
+    next:'Next',
+    skip:'Skip',
+    submit:'Submit ✓',
+    read_on:'Got it, continue →',
+    q_label:'Question',
+    of:'/',
+    read_concept:'Please read the following',
+    concept_title:'Product Concept',
+    concept_items:[
+      ['Interchangeable Heads','Includes a straightening brush, blow-dry brush, and diffuser — three heads for different styling needs'],
+      ['Coanda Airflow Tech','Special airflow wraps hair naturally around the brush for even heat distribution and smoother cuticles'],
+      ['Innovative Bristle Design','Specially crafted bristles with optimized length and layout for strong grip with reduced tangling'],
+      ['Smart Temperature Control','Real-time sensing of hair temperature, auto-adjusting heat output for effective styling while protecting hair'],
+      ['Plasma Hair Care','Negative ions and plasma work together to deeply moisturize and repair damaged hair for enhanced smoothness'],
+      ['Universal Voltage','Supports 100V–240V — works in any country without adapters'],
+      ['Lightweight & Compact','Lighter and more compact than most hot air brushes — ideal for daily use and travel'],
+    ],
+    dividers:{ 1:'Basic Info', 7:'Daily Hair Habits', 16:'Scenarios & Needs', 19:'Tool Experience', 26:'New Product Concept', 30:'Final Questions' },
+    questions:[
+      { id:'S1', type:'single', text:'Do you regularly use hair styling tools?', sub:'e.g. hair dryer, hot air brush, curling iron, flat iron', required:true,
+        opts:['Yes, almost every time I wash my hair','Yes, a few times a week','Occasionally, depending on the occasion','Rarely or never'], disqualify:[3] },
+      { id:'Q1', type:'single', text:'What is your age group?', required:true,
+        opts:['18–24','25–30','31–35','36–40','41–45','45+'] },
+      { id:'Q2', type:'single', text:'Where do you currently live?', required:true,
+        opts:['Mainland China','Hong Kong / Macau / Taiwan','USA / Canada','Europe','Middle East (Saudi Arabia, UAE, etc.)','Russia / Eastern Europe','Southeast Asia','Other'] },
+      { id:'Q3', type:'single', text:'How often do you travel overnight for work or leisure?', required:true,
+        opts:['Almost every week','2–3 times a month','About once a month','1–2 times a quarter','A few times a year or less','Rarely travel'] },
+      { id:'Q4L', type:'single', text:'What is your hair length?', required:true,
+        opts:['Very short (above ears)','Short (ears to chin)','Medium-short (chin to shoulders)','Medium-long (shoulders to chest)','Long (below chest)'] },
+      { id:'Q5LS', type:'single', text:'Which best describes your daily life?', required:true,
+        opts:['High appearance standards daily (client-facing, management, healthcare, education, service, etc.)','Mainly office or team-based work, occasional important meetings','Mostly work from home or freelance, infrequent outings','Student','Primarily home and family-focused, fewer social image occasions','Other'] },
+      { id:'Q6HT', type:'multi', text:'How would you describe your hair?', sub:'Select all that apply', required:true, max:8, groupLabels:['Texture','Volume & Thickness','Hair Condition','Chemical Treatments (past year)'],
+        groups:[0,0,0,0,1,1,1,2,2,2,2,3,3,3,3],
+        opts:['Naturally straight','Natural waves','Curly (loose to medium)','Tightly coiled','Fine / thin / low density','Medium density','Thick / coarse / high density','Healthy and shiny','Dry, frizzy, prone to flyaways','Damaged (breakage, split ends)','Oily scalp, roots tend to flatten','Color-treated','Permed / chemically curled','Chemically straightened','No chemical treatments'] },
+      { id:'Q7PW', type:'multi', text:'How does your hair typically look after washing and air-drying?', sub:'Select all that apply', required:true, max:4,
+        opts:['Naturally smooth, minimal styling needed','Slight natural wave, easy to manage','Frizzy and puffy, needs tools to tame','Curly and tangled, hard to comb through','Scalp gets oily quickly, roots flatten','Dry and rough to the touch'] },
+      { id:'Q8A', type:'single', text:'How long does it usually take you to do your hair (dry + style)?', required:true,
+        opts:['Under 5 minutes','5–10 minutes','10–20 minutes','20–30 minutes','Over 30 minutes'] },
+      { id:'Q8B', type:'single', text:'Do you feel this time is…', required:true,
+        opts:['Totally fine, not too long','A bit long, but manageable','Too long — I wish it were shorter'] },
+      { id:'Q8C', type:'single', text:'What\'s the main difficulty?', required:false, showIf:{qid:'Q8B',values:[1,2]},
+        opts:['Takes too long to dry — hair is too thick or long','Hard to achieve the desired style, requires multiple attempts','Tools are awkward or difficult to use','Not enough time in the morning','Other'] },
+      { id:'Q9A', type:'single', text:'How often do you intentionally style your hair at home (beyond just drying)?', required:true,
+        opts:['Almost every day','2–3 times a week','About once a week','Only for special occasions','Rarely — I find it too difficult or time-consuming'] },
+      { id:'Q9B', type:'multi', text:'What are the main challenges when styling at home?', sub:'Select all that apply', required:false, max:3,
+        opts:['Tools don\'t deliver the look I want','Too technique-dependent, hard to get right','Takes too much time','Risk of heat damage or burning my scalp','Style doesn\'t hold — falls apart quickly','No major challenges, I manage fine'] },
+      { id:'Q10', type:'single', text:'Do you get perms or chemical straightening treatments?', required:true,
+        opts:['Yes, about every 3 months','Yes, about every 6 months','Occasionally, no fixed schedule','Never'] },
+      { id:'Q10B', type:'single', text:'How would you assess your current hair damage level?', required:true,
+        opts:['Healthy, no noticeable damage','Mildly damaged — occasional dryness or split ends','Moderately damaged — visibly frizzy and dry','Severely damaged — breakage, split ends, loss of elasticity'] },
+      { id:'Q10C', type:'single', text:'How concerned are you about heat damage from daily styling tools?', required:true,
+        opts:['Not concerned at all — not a factor for me','Slightly concerned, but it doesn\'t change my habits','Fairly concerned — I consciously limit heat use or adjust temperature','Very concerned — it\'s the most important factor when choosing a tool'] },
+      { id:'Q11', type:'multi', text:'In which situations do you care most about how your hair looks?', sub:'Select up to 3', required:true, max:3,
+        opts:['Regular workday','Important meeting / client visit','Date / important social event','Weekend outing / gathering','Business trip','Leisure travel / vacation','Staying home'] },
+      { id:'Q12', type:'grid', text:'How much does hair care stress you out in these situations?', sub:'Select one per row', required:true,
+        rows:['Regular workday','Important meeting / business occasion','Date / important social event','Business trip / work travel','Leisure travel / vacation'],
+        cols:['No stress','Mild','Noticeable','Very stressful'] },
+      { id:'Q13', type:'multi', text:'When traveling, what are your biggest hair challenges?', sub:'Select up to 3', required:false, max:3,
+        opts:['No proper tools — stuck using the hotel dryer','Tools too heavy or bulky for luggage','Voltage / plug incompatibility abroad','Not enough time to properly style','Hair reacts differently to new water / climate','Give up on styling altogether','No particular challenges when traveling'] },
+{ id:'Q14', type:'multi', text:'Which hair styling tools do you currently use?', sub:'Select all that apply', required:true, max:6,
+        opts:['Regular hair dryer','High-speed hair dryer (e.g. Dyson, Dreame, etc.)','Hot air brush / blow-dry brush','Multi-attachment styling set (e.g. Shark FlexStyle)','Dyson Airwrap / Supersonic','Curling iron (manual)','Auto curler / lazy curler','Flat iron / straightener','Ionic brush / heated brush','Mostly no tools','Other'] },
+      { id:'QPUR', type:'multi', text:'Why do you mainly buy hair styling tools?', sub:'Select up to 2', required:true, max:2,
+        opts:['Quick daily grooming — fast and effortless','Achieving polished, professional-looking styles','Protecting hair health, reducing damage','Travel-friendly — light and portable','All-in-one — fewer tools to own'] },
+      { id:'QPREF1', type:'single', text:'If you were to buy a hair styling tool today, which would you prefer?', required:true,
+        opts:['A compact multi-function set — interchangeable heads for straight and curly styling in one','A simple, easy-to-use hot air brush — straightforward and focused on daily styling','Not sure yet — depends on the specific product'] },
+      { id:'QPREF2', type:'single', text:'If you choose a hot air brush, which type would you prefer?', required:true,
+        opts:['Straightening brush — dense bristles for smoothing, straightening and adding volume','Oval brush — barrel design for natural waves, curled ends and fuller-looking hair','Both would be useful','Not sure, need to learn more'] },
+      { id:'Q17', type:'single', text:'When buying a hair styling tool, what matters most to you?', required:true,
+        opts:['Great styling results that last','Easy to use, no technique required','Gentle on hair, minimal damage','Lightweight and travel-friendly','Multi-functional, one tool does it all','Good value for money','Brand reputation and reviews'] },
+      { id:'Q18', type:'open', text:'What improvement would you most want to see in your current hair tools?', sub:'Describe in your own words', required:false },
+      { id:'CONCEPT', type:'concept', text:'', required:false },
+      { id:'Q19', type:'scale', text:'Overall, how interested are you in this product?', left:'Not interested at all', right:'Very interested', points:5, required:true },
+      { id:'Q20', type:'rank', text:'Rank these 7 product features by how appealing they are to you', sub:'Tap a number then tap the item to assign its rank (1 = most appealing)', required:true,
+        opts:['Interchangeable heads (straightener / blow-dry brush / diffuser)','Coanda airflow technology (smoother cuticles)','Innovative bristles (strong grip + less tangling)','Smart temperature control (auto-adjusts to protect hair)','Plasma hair care (deep repair, enhanced smoothness)','Universal voltage (use anywhere in the world)','Lightweight & compact (daily use and travel)'] },
+      { id:'Q21', type:'multi', text:'Do you have any concerns about this product?', sub:'Select up to 3', required:false, max:3,
+        opts:['Not sure if it\'s actually better than a regular hot air brush','Worried about attachment swapping being inconvenient','Universal voltage doesn\'t matter to me','Price may exceed my budget','Similar products already exist on the market','Unfamiliar brand, unsure about quality','No concerns — I\'m quite interested'] },
+      { id:'Q22', type:'single', text:'This is an emerging brand. The styling set is priced at $160–$200 USD. What do you think?', required:true,
+        opts:['Totally acceptable — I\'d consider buying it','A bit high, but I\'d consider it if the quality is good','On the high side — I\'d wait for a sale','Over my budget — I wouldn\'t buy it','I\'d need to see real reviews before deciding'] },
+      { id:'Q23', type:'open', text:'If you could tell the people making this product one thing, what would it be?', required:false },
+      { id:'Q24', type:'single', text:'Would you be willing to join a future product trial or in-depth interview?', sub:'We\'d send a small gift as a thank-you', required:true,
+        opts:['Yes, please reach out to me','Maybe, depending on the details','Not right now'] },
+      { id:'Q25', type:'open', text:'If yes, please leave your contact info', sub:'Email / phone / social handle — optional', required:false },
+    ]
+  },
+
+  ar: {
+    eyebrow:'بحث المستخدمين',
+    title:'ما هي قصتك مع شعرك؟',
+    subtitle1:'نعمل على تطوير أداة تصفيف شعر جديدة ونريد أن نسمع تجربتك الحقيقية أولاً.',
+    subtitle2:'لا ترويج، فقط حديث صريح.',
+    meta:'حوالي ١٥ دقيقة · سري تماماً · ٣٣ سؤالاً',
+    start:'ابدأ الاستبيان ←',
+    disq_title:'شكراً لمشاركتك',
+    disq_body:'هذا الاستبيان مخصص للأشخاص الذين يستخدمون أدوات تصفيف الشعر بانتظام. يبدو أنك لا تنتمي إلى هذه الفئة — شكراً جزيلاً لوقتك.',
+    end_title:'شكراً لإكمالك الاستبيان!',
+    end_body:'كل إجابة قدمتِها صوت حقيقي\nسيؤثر مباشرة في صنع منتج أفضل.',
+    end_interest:'مستوى الاهتمام بالمنتج',
+    end_price:'موقفك من السعر',
+    end_followup:'الاستعداد للمشاركة لاحقاً',
+    end_recorded:'تم تسجيل إجاباتك كاملةً. شكراً لمشاركتك.',
+    next:'التالي',
+    skip:'تخطي',
+    submit:'إرسال الاستبيان ✓',
+    read_on:'فهمت، تابع ←',
+    q_label:'سؤال',
+    of:'/',
+    read_concept:'يرجى قراءة ما يلي',
+    concept_title:'وصف المنتج المقترح',
+    concept_items:[
+      ['رؤوس قابلة للتبديل','تشمل فرشاة التمليس، فرشاة التجفيف، والموزّع — ثلاثة رؤوس لتلبية احتياجات التصفيف المختلفة'],
+      ['تقنية تدفق كواندا الهوائي','تدفق هوائي خاص يلتف حول الشعر بشكل طبيعي لتوزيع الحرارة بالتساوي وإغلاق قشور الشعر'],
+      ['تصميم أسنان مبتكر','مادة خاصة للأسنان مع طول ومسافة مدروسَين لإمساك الشعر بقوة مع تقليل التشابك'],
+      ['التحكم الذكي في درجة الحرارة','استشعار فوري لدرجة حرارة الشعر وتعديل تلقائي للحرارة لتصفيف فعّال مع حماية الشعر'],
+      ['تقنية البلازما للعناية بالشعر','تعاون الأيونات السالبة والبلازما لترطيب الشعر التالف عمقياً وتعزيز نعومته'],
+      ['جهد عالمي','يدعم ١٠٠-٢٤٠ فولت — يعمل في أي دولة دون الحاجة لمحوّل'],
+      ['خفيف ومدمج','أخف وأصغر من معظم فرشاة الشعر الساخنة — مثالي للاستخدام اليومي والسفر'],
+    ],
+    dividers:{ 1:'المعلومات الأساسية', 7:'عادات العناية بالشعر', 16:'المواقف والاحتياجات', 19:'تجربة الأدوات', 26:'مفهوم المنتج الجديد', 30:'الأسئلة الأخيرة' },
+    questions:[
+      { id:'S1', type:'single', text:'هل تستخدمين أدوات تصفيف الشعر بانتظام؟', sub:'مثل مجفف الشعر، الفرشاة الساخنة، المكوى، جهاز التجعيد', required:true,
+        opts:['نعم، تقريباً في كل مرة أغسل شعري','نعم، عدة مرات في الأسبوع','أحياناً، حسب المناسبة','نادراً أو لا أستخدم'], disqualify:[3] },
+      { id:'Q1', type:'single', text:'ما هي فئتك العمرية؟', required:true,
+        opts:['١٨–٢٤','٢٥–٣٠','٣١–٣٥','٣٦–٤٠','٤١–٤٥','٤٥ فأكثر'] },
+      { id:'Q2', type:'single', text:'أين تقيمين حالياً؟', required:true,
+        opts:['المملكة العربية السعودية','الإمارات العربية المتحدة','دول الخليج الأخرى','مصر / الشام / شمال أفريقيا','أوروبا','الولايات المتحدة / كندا','آسيا','أخرى'] },
+      { id:'Q3', type:'single', text:'كم مرة تسافرين (لليلة أو أكثر)؟', required:true,
+        opts:['تقريباً كل أسبوع','٢–٣ مرات في الشهر','مرة تقريباً في الشهر','مرة أو مرتين في الربع','بضع مرات في السنة أو أقل','نادراً ما أسافر'] },
+      { id:'Q4L', type:'single', text:'ما هو طول شعرك تقريباً؟', required:true,
+        opts:['قصير جداً (فوق الأذنين)','قصير (من الأذن إلى الذقن)','متوسط قصير (من الذقن إلى الكتفين)','متوسط طويل (من الكتفين إلى الصدر)','طويل (أسفل الصدر)'] },
+      { id:'Q5LS', type:'single', text:'أي من هذه الأوصاف يصف حياتك اليومية أكثر؟', required:true,
+        opts:['أحتاج يومياً لمظهر أنيق أمام العملاء أو الجمهور (مبيعات، إدارة، صحة، تعليم، خدمات...)','أعمل في بيئة مكتبية أو فريق، مع اجتماعات مهمة أحياناً','أعمل من المنزل أو عمل حر، خروجي محدود','طالبة','مسؤولة عن الأسرة بشكل رئيسي، مناسبات اجتماعية أقل','أخرى'] },
+      { id:'Q6HT', type:'multi', text:'كيف تصفين شعرك؟', sub:'يمكن اختيار أكثر من إجابة', required:true, max:8, groupLabels:['نوع الشعر','الكثافة والسماكة','حالة الشعر','المعالجات الكيميائية (السنة الماضية)'],
+        groups:[0,0,0,0,1,1,1,2,2,2,2,3,3,3,3],
+        opts:['مستقيم طبيعي','موجات طبيعية','مجعد (تجعيد واسع أو متوسط)','مجعد بتايت (تجعيد ضيق)','خفيف وناعم وقليل الكثافة','كثافة متوسطة','كثيف وخشن وعالي الكثافة','صحي ولامع','جاف ومتقصف ويطير بسهولة','تالف (تكسر، أطراف مشقوقة)','فروة الرأس تُدهن بسرعة وجذور الشعر تنبطح','مصبوغ','معمول له بيرم أو تجعيد كيميائي','معمول له تمليس أو كيراتين','بدون أي معالجات كيميائية'] },
+      { id:'Q7PW', type:'multi', text:'بعد غسل شعرك وتركه يجف طبيعياً، ما هو شكله عادةً؟', sub:'يمكن اختيار أكثر من إجابة', required:true, max:4,
+        opts:['مستقيم وسلس، لا يحتاج تقريباً لأي تصفيف','موجة خفيفة طبيعية، سهل التعامل معه','منتفش ومتجعد، يحتاج أدوات لضبطه','مجعد ومتشابك، يصعب تمشيطه','فروة الرأس تُدهن سريعاً وجذور الشعر تنبطح','جاف وخشن الملمس'] },
+      { id:'Q8A', type:'single', text:'كم تستغرقين عادةً لتصفيف شعرك (تجفيف + تصفيف)؟', required:true,
+        opts:['أقل من ٥ دقائق','٥–١٠ دقائق','١٠–٢٠ دقيقة','٢٠–٣٠ دقيقة','أكثر من ٣٠ دقيقة'] },
+      { id:'Q8B', type:'single', text:'تشعرين أن هذا الوقت…', required:true,
+        opts:['مقبول تماماً، لا أعتبره طويلاً','طويل نوعاً ما، لكن لا بأس','طويل جداً، أتمنى لو كان أقل'] },
+      { id:'Q8C', type:'single', text:'ما أبرز صعوبة تواجهيها؟', required:false, showIf:{qid:'Q8B',values:[1,2]},
+        opts:['التجفيف يأخذ وقتاً طويلاً لأن شعري كثيف أو طويل','صعب الحصول على التصفيف المطلوب ويحتاج محاولات متعددة','الأدوات غير مريحة أو صعبة الاستخدام','الوقت ضيق في الصباح','أخرى'] },
+      { id:'Q9A', type:'single', text:'كم مرة تقومين بتصفيف شعرك بشكل مقصود في المنزل (ليس مجرد التجفيف)؟', required:true,
+        opts:['تقريباً يومياً','٢–٣ مرات في الأسبوع','مرة في الأسبوع','في المناسبات المهمة فقط','نادراً — أجده صعباً أو مستهلكاً للوقت'] },
+      { id:'Q9B', type:'multi', text:'ما أبرز التحديات عند تصفيف الشعر في المنزل؟', sub:'يمكن اختيار أكثر من إجابة', required:false, max:3,
+        opts:['الأدوات لا تعطي النتيجة المطلوبة','تحتاج مهارة ومهارة للحصول على النتيجة','تستغرق وقتاً طويلاً','خطر الحرارة على الشعر أو فروة الرأس','التصفيف لا يثبت ويزول بسرعة','لا توجد تحديات كبيرة، أتعامل معه بشكل جيد'] },
+      { id:'Q10', type:'single', text:'هل تقومين بعمل بيرم أو تمليس كيميائي بانتظام؟', required:true,
+        opts:['نعم، كل ٣ أشهر تقريباً','نعم، كل ٦ أشهر تقريباً','أحياناً، بدون جدول محدد','لا أبداً'] },
+      { id:'Q10B', type:'single', text:'كيف تقيّمين مستوى تلف شعرك حالياً؟', required:true,
+        opts:['شعر صحي، لا يوجد تلف واضح','تلف خفيف — جفاف أو أطراف مشقوقة أحياناً','تلف متوسط — جفاف وتقصف ملحوظ','تلف شديد — تكسر وأطراف مشقوقة وفقدان المرونة'] },
+      { id:'Q10C', type:'single', text:'ما مدى قلقك من تلف شعرك بسبب الأدوات الحرارية اليومية؟', required:true,
+        opts:['لا أقلق إطلاقاً، ليس من أولوياتي','قليل من القلق، لكنه لا يؤثر على عاداتي','قلق نسبي — أتحكم في تكرار الاستخدام أو درجة الحرارة','قلق شديد — هذا أهم معيار عندي لاختيار الأداة'] },
+      { id:'Q11', type:'multi', text:'في أي المواقف تهتمين أكثر بمظهر شعرك؟', sub:'اختاري ما يصل إلى ٣ خيارات', required:true, max:3,
+        opts:['يوم عمل عادي','اجتماع مهم / لقاء عمل','موعد / مناسبة اجتماعية مهمة','خروج نهاية الأسبوع / تجمعات','رحلة عمل','سفر ترفيهي / إجازة','البقاء في المنزل'] },
+      { id:'Q12', type:'grid', text:'ما مدى إزعاجك من العناية بالشعر في هذه المواقف؟', sub:'اختاري إجابة واحدة في كل صف', required:true,
+        rows:['يوم عمل عادي','اجتماع مهم / مناسبة عمل','موعد / مناسبة اجتماعية مهمة','رحلة عمل / سفر رسمي','سفر ترفيهي / إجازة'],
+        cols:['لا إزعاج','خفيف','واضح','إزعاج شديد'] },
+      { id:'Q13', type:'multi', text:'ما أكبر تحديات شعرك أثناء السفر؟', sub:'اختاري ما يصل إلى ٣ خيارات', required:false, max:3,
+        opts:['لا توجد أدوات مناسبة، أضطر لاستخدام مجفف الفندق','الأدوات ثقيلة أو كبيرة جداً','عدم توافق الجهد الكهربائي / المقبس خارج البلاد','لا وقت كافٍ للتصفيف الجيد','تغير الماء / المناخ يؤثر على الشعر','أتخلى عن التصفيف تماماً','لا تحديات خاصة أثناء السفر'] },
+      { id:'Q14', type:'multi', text:'ما هي أدوات تصفيف الشعر التي تستخدمينها حالياً؟', sub:'يمكن اختيار أكثر من إجابة', required:true, max:6,
+        opts:['مجفف شعر عادي','مجفف شعر عالي السرعة','فرشاة ساخنة / فرشاة تجفيف','مجموعة تصفيف متعددة الرؤوس (مثل Shark FlexStyle)','Dyson Airwrap / Supersonic','جهاز تجعيل يدوي','جهاز تجعيل أوتوماتيكي','مكوى / فردة شعر','فرشاة أيونية / فرشاة كهربائية ساخنة','لا أستخدم أدوات في الغالب','غير ذلك'] },
+      { id:'QPUR', type:'multi', text:'لماذا تشترين أدوات تصفيف الشعر بشكل رئيسي؟', sub:'اختاري ما يصل إلى خيارين', required:true, max:2,
+        opts:['العناية اليومية السريعة — سهولة وتوفير الوقت','الحصول على تصفيف أنيق واحترافي','حماية الشعر وتقليل التلف','خفيفة ومناسبة للسفر','متعددة الاستخدامات — تغني عن أدوات أخرى'] },
+      { id:'QPREF1', type:'single', text:'إذا كنتِ ستشترين أداة تصفيف الشعر اليوم، أيهما تفضلين؟', required:true,
+        opts:['مجموعة متعددة الوظائف ومدمجة — رؤوس قابلة للتبديل للتمليس والتجعيد في أداة واحدة','فرشاة ساخنة بسيطة وسهلة الاستخدام — مريحة ومركزة على التصفيف اليومي','لم أقرر بعد — يعتمد على المنتج المحدد'] },
+      { id:'QPREF2', type:'single', text:'إذا اخترتِ فرشاة ساخنة، أي نوع تفضلين؟', required:true,
+        opts:['فرشاة التمليس — أسنان متقاربة لتمليس الشعر وتنعيمه وإضافة الحجم','الفرشاة البيضاوية — تصميم أسطواني لتجعيد طبيعي وانعطاف الأطراف وإضافة كثافة','كلاهما مفيد','غير متأكدة، أحتاج لمزيد من المعلومات'] },
+      { id:'Q17', type:'single', text:'ما الذي يهمك أكثر عند شراء أداة تصفيف الشعر؟', required:true,
+        opts:['نتائج تصفيف جيدة وتدوم طويلاً','سهلة الاستخدام لا تتطلب مهارة','خفيفة على الشعر لا تسبب تلفاً','خفيفة الوزن ومناسبة للسفر','متعددة الوظائف','قيمة جيدة مقابل السعر','سمعة العلامة التجارية والتقييمات'] },
+      { id:'Q18', type:'open', text:'ما الذي تودين تحسينه في أدوات تصفيف الشعر الحالية؟', sub:'صفي بكلماتك الخاصة', required:false },
+      { id:'CONCEPT', type:'concept', text:'', required:false },
+      { id:'Q19', type:'scale', text:'ما مستوى اهتمامك العام بهذا المنتج؟', left:'غير مهتمة على الإطلاق', right:'مهتمة جداً', points:5, required:true },
+      { id:'Q20', type:'rank', text:'رتّبي هذه الخصائص السبع حسب جاذبيتها لك', sub:'اضغطي على رقم ثم اضغطي على العنصر لتعيين ترتيبه (١ = الأكثر جاذبية)', required:true,
+        opts:['رؤوس قابلة للتبديل (فرشاة تمليس / تجفيف / موزّع)','تقنية تدفق كواندا (قشور شعر أكثر نعومة)','أسنان مبتكرة (قبضة قوية + تقليل التشابك)','التحكم الذكي بالحرارة (يحمي الشعر تلقائياً)','تقنية البلازما (إصلاح عميق وتعزيز النعومة)','جهد عالمي (يعمل في أي مكان)','خفيف ومدمج (للاستخدام اليومي والسفر)'] },
+      { id:'Q21', type:'multi', text:'هل لديكِ أي مخاوف بشأن هذا المنتج؟', sub:'يمكن اختيار ما يصل إلى ٣ خيارات', required:false, max:3,
+        opts:['لست متأكدة إذا كان أفضل فعلاً من الفرشاة الساخنة العادية','قلقة من أن تبديل الرأس قد يكون مرهقاً','الجهد العالمي ليس مهماً بالنسبة لي','السعر قد يتجاوز ميزانيتي','توجد منتجات مشابهة في السوق','لست على دراية بالعلامة التجارية','لا مخاوف لديّ، أنا مهتمة'] },
+      { id:'Q22', type:'single', text:'هذه علامة تجارية ناشئة، والمجموعة مسعّرة بـ ١٦٠–٢٠٠ دولار (حوالي ٦٠٠–٧٥٠ ريال). ما رأيك؟', required:true,
+        opts:['مقبول تماماً، سأفكر في الشراء','مرتفع قليلاً، لكن قد أشتري إذا كانت الجودة جيدة','مرتفع، ربما أنتظر التخفيضات','يتجاوز ميزانيتي، لن أشتري','أحتاج لرؤية تقييمات حقيقية أولاً'] },
+      { id:'Q23', type:'open', text:'إذا استطعتِ إخبار صانعي هذا المنتج بشيء واحد، ماذا ستقولين؟', required:false },
+      { id:'Q24', type:'single', text:'هل أنتِ مستعدة للمشاركة في تجربة المنتج أو مقابلة مستقبلاً؟', sub:'سنقدم هدية صغيرة كشكر', required:true,
+        opts:['نعم، تواصلوا معي','ربما، حسب التفاصيل','ليس الآن'] },
+      { id:'Q25', type:'open', text:'إذا وافقتِ، يرجى ترك معلومات الاتصال', sub:'بريد إلكتروني / هاتف / واتساب — اختياري', required:false },
+    ]
+  },
+
+  ru: {
+    eyebrow:'Исследование пользователей',
+    title:'Какова ваша история\nс волосами?',
+    subtitle1:'Мы разрабатываем новый инструмент для укладки и хотим сначала услышать ваш реальный опыт.',
+    subtitle2:'Никаких продаж — просто разговор.',
+    meta:'Около 15 минут · Анонимно · 33 вопроса',
+    start:'Начать опрос →',
+    disq_title:'Спасибо за участие',
+    disq_body:'Этот опрос предназначен для тех, кто регулярно пользуется инструментами для укладки волос. Вы не подходите под критерии — большое спасибо за ваше время.',
+    end_title:'Спасибо, что прошли опрос!',
+    end_body:'Каждый ваш ответ — это живой голос,\nкоторый напрямую повлияет на создание лучшего продукта.',
+    end_interest:'Уровень интереса к продукту',
+    end_price:'Отношение к цене',
+    end_followup:'Готовность к дальнейшему участию',
+    end_recorded:'Ваши ответы записаны. Спасибо за участие.',
+    next:'Далее',
+    skip:'Пропустить',
+    submit:'Отправить ✓',
+    read_on:'Понятно, продолжить →',
+    q_label:'Вопрос',
+    of:'/',
+    read_concept:'Пожалуйста, прочитайте следующее',
+    concept_title:'Описание концепции продукта',
+    concept_items:[
+      ['Сменные насадки','Включает расчёску для выпрямления, насадку для сушки и диффузор — три насадки для разных потребностей укладки'],
+      ['Технология воздушного потока Коанда','Специальный поток обволакивает волосы для равномерного нагрева и гладкости чешуек'],
+      ['Инновационный дизайн зубьев','Специальный материал зубьев с продуманной длиной для надёжного захвата при минимальном запутывании'],
+      ['Умный контроль температуры','Мгновенный датчик температуры волос, автоматическая регулировка нагрева для эффективной укладки с защитой'],
+      ['Плазменный уход за волосами','Отрицательные ионы и плазма глубоко увлажняют и восстанавливают повреждённые волосы, повышая гладкость'],
+      ['Универсальное напряжение','Поддерживает 100–240 В — работает в любой стране без адаптеров'],
+      ['Лёгкий и компактный','Легче и компактнее большинства фенов-щёток — идеально для ежедневного использования и в поездках'],
+    ],
+    dividers:{ 1:'Основная информация', 7:'Ежедневные привычки', 16:'Ситуации и потребности', 19:'Опыт с инструментами', 26:'Концепция нового продукта', 30:'Последние вопросы' },
+    questions:[
+      { id:'S1', type:'single', text:'Вы регулярно пользуетесь инструментами для укладки волос?', sub:'Например: фен, фен-щётка, плойка, утюжок', required:true,
+        opts:['Да, почти каждый раз после мытья волос','Да, несколько раз в неделю','Иногда, в зависимости от случая','Редко или никогда'], disqualify:[3] },
+      { id:'Q1', type:'single', text:'Ваша возрастная группа?', required:true,
+        opts:['18–24','25–30','31–35','36–40','41–45','Старше 45'] },
+      { id:'Q2', type:'single', text:'Где вы сейчас живёте?', required:true,
+        opts:['Россия','СНГ (Казахстан, Беларусь и др.)','Европа','США / Канада','Ближний Восток','Китай / Азия','Другое',''] },
+      { id:'Q3', type:'single', text:'Как часто вы путешествуете или ездите в командировки (с ночёвкой)?', required:true,
+        opts:['Почти каждую неделю','2–3 раза в месяц','Примерно раз в месяц','1–2 раза в квартал','Несколько раз в год или реже','Почти не путешествую'] },
+      { id:'Q4L', type:'single', text:'Какова длина ваших волос?', required:true,
+        opts:['Очень короткие (выше ушей)','Короткие (от уха до подбородка)','Средней длины — короткие (от подбородка до плеч)','Средней длины — длинные (от плеч до груди)','Длинные (ниже груди)'] },
+      { id:'Q5LS', type:'single', text:'Какое описание лучше всего подходит к вашей повседневной жизни?', required:true,
+        opts:['Ежедневно нужен ухоженный вид — работа с клиентами, публичные выступления и т.д.','Преимущественно офис или командная работа, иногда важные встречи','В основном работаю из дома или фриланс, редко выхожу','Студентка','Забота о семье — меньше социальных поводов следить за внешностью','Другое'] },
+      { id:'Q6HT', type:'multi', text:'Как бы вы описали свои волосы?', sub:'Можно выбрать несколько', required:true, max:8, groupLabels:['Текстура','Объём и толщина','Состояние волос','Химические обработки (за последний год)'],
+        groups:[0,0,0,0,1,1,1,2,2,2,2,3,3,3,3],
+        opts:['Натурально прямые','Натуральные волны','Кудрявые (крупные / средние локоны)','Сильно вьющиеся','Тонкие / редкие / малой густоты','Средняя густота','Густые / жёсткие / плотные','Здоровые и блестящие','Сухие, пушистые, склонные к пушению','Повреждённые (ломкость, секущиеся кончики)','Жирная кожа головы, корни быстро приплюснуты','Окрашенные','Химическая завивка','Химическое выпрямление','Никаких химических обработок'] },
+      { id:'Q7PW', type:'multi', text:'Как ваши волосы выглядят после мытья и естественной сушки?', sub:'Можно выбрать несколько', required:true, max:4,
+        opts:['Гладкие и прямые, почти не нужна укладка','Лёгкая натуральная волна, легко укладываются','Пушистые и объёмные, нужны инструменты','Кудрявые и запутанные, трудно расчесать','Кожа головы быстро жирнеет, корни приплюснуты','Сухие и шероховатые на ощупь'] },
+      { id:'Q8A', type:'single', text:'Сколько времени у вас обычно уходит на волосы (сушка + укладка)?', required:true,
+        opts:['Меньше 5 минут','5–10 минут','10–20 минут','20–30 минут','Больше 30 минут'] },
+      { id:'Q8B', type:'single', text:'Вы считаете это время…', required:true,
+        opts:['Полностью нормальным, не слишком долго','Немного долго, но терпимо','Слишком долго — хотелось бы быстрее'] },
+      { id:'Q8C', type:'single', text:'В чём главная сложность?', required:false, showIf:{qid:'Q8B',values:[1,2]},
+        opts:['Долго сохнут — волосы слишком густые или длинные','Трудно добиться нужного результата, приходится повторять','Инструменты неудобны в использовании','Утром не хватает времени','Другое'] },
+      { id:'Q9A', type:'single', text:'Как часто вы намеренно укладываете волосы дома (не просто сушите)?', required:true,
+        opts:['Почти каждый день','2–3 раза в неделю','Примерно раз в неделю','Только по особым случаям','Редко — слишком сложно или долго'] },
+      { id:'Q9B', type:'multi', text:'Какие главные трудности при укладке дома?', sub:'Можно выбрать несколько', required:false, max:3,
+        opts:['Инструменты не дают нужный результат','Требует техники и навыков','Занимает слишком много времени','Риск теплового повреждения или ожога кожи головы','Укладка не держится, быстро рассыпается','Особых трудностей нет, справляюсь хорошо'] },
+      { id:'Q10', type:'single', text:'Вы делаете химическую завивку или выпрямление?', required:true,
+        opts:['Да, примерно раз в 3 месяца','Да, примерно раз в 6 месяцев','Иногда, без чёткого графика','Никогда'] },
+      { id:'Q10B', type:'single', text:'Как бы вы оценили текущий уровень повреждения ваших волос?', required:true,
+        opts:['Здоровые, без заметных повреждений','Слабые повреждения — иногда сухость или секущиеся кончики','Умеренные повреждения — заметная сухость и пушение','Сильные повреждения — ломкость, сечение, потеря эластичности'] },
+      { id:'Q10C', type:'single', text:'Насколько вас беспокоит тепловое повреждение от ежедневного использования стайлеров?', required:true,
+        opts:['Совсем не беспокоит — не влияет на мой выбор','Немного беспокоит, но не меняет привычки','Довольно беспокоит — сознательно ограничиваю использование','Очень беспокоит — это главный критерий при выборе инструмента'] },
+      { id:'Q11', type:'multi', text:'В каких ситуациях вам важнее всего, как выглядят ваши волосы?', sub:'Выберите не более 3', required:true, max:3,
+        opts:['Обычный рабочий день','Важная встреча / деловые переговоры','Свидание / важное социальное событие','Прогулка / встреча с друзьями в выходные','Командировка','Отпуск / туристическая поездка','Нахождение дома'] },
+      { id:'Q12', type:'grid', text:'Насколько сложно вам ухаживать за волосами в этих ситуациях?', sub:'Выберите один ответ в каждой строке', required:true,
+        rows:['Обычный рабочий день','Важная встреча / деловое мероприятие','Свидание / важное социальное событие','Командировка / деловая поездка','Отпуск / туристическая поездка'],
+        cols:['Нет сложностей','Небольшие','Заметные','Очень сложно'] },
+      { id:'Q13', type:'multi', text:'Какие проблемы с волосами у вас чаще всего возникают в поездках?', sub:'Выберите не более 3', required:false, max:3,
+        opts:['Нет подходящих инструментов, приходится пользоваться феном отеля','Приборы слишком тяжёлые или громоздкие','Несовместимость напряжения / розеток за границей','Не хватает времени на нормальную укладку','Другой климат / вода влияет на состояние волос','Отказываюсь от укладки во время поездок','Особых проблем нет'] },
+      { id:'Q14', type:'multi', text:'Какими инструментами для волос вы сейчас пользуетесь?', sub:'Можно выбрать несколько', required:true, max:6,
+        opts:['Обычный фен','Высокоскоростной фен (например, Dyson, Dreame и др.)','Фен-щётка / расчёска-фен','Набор для укладки со сменными насадками (например, Shark FlexStyle)','Dyson Airwrap / Supersonic','Плойка (ручная)','Автоматическая плойка','Выпрямитель / утюжок','Ионная расчёска / нагревательная щётка','В основном обхожусь без приборов','Другое'] },
+      { id:'QPUR', type:'multi', text:'Зачем вы в основном покупаете инструменты для укладки?', sub:'Выберите не более 2', required:true, max:2,
+        opts:['Быстрый ежедневный уход — легко и без лишних усилий','Создание стильных профессиональных укладок','Защита волос и снижение повреждений','Удобство в поездках — лёгкий и компактный','Многофункциональность — меньше инструментов'] },
+      { id:'QPREF1', type:'single', text:'Если бы вы покупали инструмент для укладки сегодня, что бы вы предпочли?', required:true,
+        opts:['Компактный многофункциональный набор — сменные насадки для выпрямления и завивки в одном','Простой и удобный фен-щётка — удобный и сфокусированный на ежедневной укладке','Ещё не решила — зависит от конкретного продукта'] },
+      { id:'QPREF2', type:'single', text:'Если вы выберете фен-щётку, какой тип предпочтёте?', required:true,
+        opts:['Расчёска для выпрямления — плотные зубья для разглаживания, выпрямления и объёма','Овальная щётка — цилиндрический дизайн для волн, загнутых кончиков и пышности','Хотела бы обе','Не уверена, нужно больше информации'] },
+      { id:'Q17', type:'single', text:'Что для вас важнее всего при покупке инструмента для укладки?', required:true,
+        opts:['Хороший и стойкий результат укладки','Простота использования, не требует навыков','Бережное отношение к волосам','Лёгкий и удобный для поездок','Многофункциональность','Хорошее соотношение цены и качества','Репутация бренда и отзывы'] },
+      { id:'Q18', type:'open', text:'Что бы вы больше всего хотели улучшить в своих нынешних инструментах?', sub:'Опишите своими словами', required:false },
+      { id:'CONCEPT', type:'concept', text:'', required:false },
+      { id:'Q19', type:'scale', text:'Насколько в целом вам интересен этот продукт?', left:'Совсем не интересно', right:'Очень интересно', points:5, required:true },
+      { id:'Q20', type:'rank', text:'Оцените 7 характеристик продукта по привлекательности', sub:'Нажмите цифру, затем нажмите на пункт, чтобы присвоить ему ранг (1 = самый привлекательный)', required:true,
+        opts:['Сменные насадки (расчёска / фен-щётка / диффузор)','Технология Коанда (гладкость чешуек)','Инновационные зубья (надёжный захват + меньше путаницы)','Умный контроль температуры (автоматическая защита волос)','Плазменный уход (глубокое восстановление, гладкость)','Универсальное напряжение (можно использовать в любой стране)','Лёгкий и компактный (для ежедневного использования и в поездках)'] },
+      { id:'Q21', type:'multi', text:'Есть ли у вас сомнения насчёт этого продукта?', sub:'Выберите не более 3', required:false, max:3,
+        opts:['Не уверена, что он лучше обычного фена-щётки','Беспокоит, что менять насадки будет неудобно','Универсальное напряжение мне не важно','Цена может превысить мой бюджет','На рынке уже есть похожие продукты','Не знакома с брендом, сомневаюсь в качестве','Нет сомнений — мне очень интересно'] },
+      { id:'Q22', type:'single', text:'Это новый бренд. Набор стоит $160–$200 (около 14 000–18 000 рублей). Что вы думаете?', required:true,
+        opts:['Полностью приемлемо, готова рассмотреть покупку','Немного дорого, но рассмотрю, если качество хорошее','Дороговато, могу подождать распродажи','Превышает мой бюджет, не куплю','Нужно сначала увидеть реальные отзывы'] },
+      { id:'Q23', type:'open', text:'Если бы вы могли сказать создателям этого продукта одну вещь, что бы это было?', required:false },
+      { id:'Q24', type:'single', text:'Готовы ли вы участвовать в будущем тестировании или углублённом интервью?', sub:'Мы пришлём небольшой подарок в знак благодарности', required:true,
+        opts:['Да, свяжитесь со мной','Возможно, в зависимости от деталей','Пока нет'] },
+      { id:'Q25', type:'open', text:'Если да, пожалуйста, оставьте контактные данные', sub:'Email / телефон / мессенджер — по желанию', required:false },
+    ]
+  }
+};
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let lang = 'zh';
+let current = 0;
+let answers = {};
+let rankState = {};
+
+function getLang() { return T[lang]; }
+function getQ(idx) { return getLang().questions[idx]; }
+const TOTAL = () => getLang().questions.length;
+
+// ═══════════════════════════════════════════════
+// LANGUAGE SWITCH
+// ═══════════════════════════════════════════════
+function setLang(l) {
+  lang = l;
+  const isRTL = (l === 'ar');
+  document.documentElement.lang = l === 'zh' ? 'zh-CN' : l;
+  document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+
+  // font family
+  const bodyFont = isRTL
+    ? "'Noto Sans Arabic', sans-serif"
+    : l === 'zh'
+      ? "'Noto Sans SC', 'Noto Sans', sans-serif"
+      : "'Noto Sans', sans-serif";
+  document.body.style.fontFamily = bodyFont;
+
+  // update lang buttons
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.trim() === {zh:'中文',en:'EN',ar:'عربي',ru:'РУС'}[l]);
+  });
+
+  // update static text
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (getLang()[key] !== undefined) {
+      el.textContent = getLang()[key];
+    }
+  });
+
+  // RTL arrow fix
+  document.getElementById('prev-arrow').textContent = isRTL ? '→' : '←';
+  document.getElementById('prev-label').textContent = {
+    zh:'上一题', en:'Back', ar:'السابق', ru:'Назад'
+  }[l] || 'Back';
+
+  // re-render current question if survey is active
+  if (document.getElementById('survey').style.display !== 'none') {
+    renderQuestion(current);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════
+function startSurvey() {
+  document.getElementById('cover').style.display = 'none';
+  document.getElementById('survey').style.display = 'block';
+  document.getElementById('nav-bar').classList.remove('hidden');
+  renderQuestion(0);
+}
+
+function renderQuestion(idx) {
+  const L = getLang();
+  const q = L.questions[idx];
+  const container = document.getElementById('q-container');
+  container.innerHTML = '';
+
+  if (L.dividers[idx]) {
+    const d = document.createElement('div');
+    d.className = 's-divider';
+    d.innerHTML = `<span>${L.dividers[idx]}</span>`;
+    container.appendChild(d);
+  }
+
+  // Concept card
+  if (q.type === 'concept') {
+    const cc = document.createElement('div');
+    cc.className = 'concept-card';
+    cc.innerHTML = `
+      <div class="c-title">${L.concept_title}</div>
+      ${L.concept_items.map(([t,d],i)=>`
+        <div class="c-item">
+          <div class="c-num">${i+1}</div>
+          <div><strong>${t}</strong>：${d}</div>
+        </div>`).join('')}`;
+    container.appendChild(cc);
+    setTimeout(() => cc.classList.add('visible'), 60);
+    updateNav(idx);
+    const btn = document.getElementById('btn-next');
+    btn.textContent = L.read_on;
+    btn.classList.add('highlight');
+    btn.disabled = false;
+    updateProgress(idx);
+    updateStepInfo(idx);
+    window.scrollTo({top:0,behavior:'smooth'});
+    return;
+  }
+
+  const card = document.createElement('div');
+  card.className = 'q-card';
+  const displayNum = getDisplayNum(idx);
+  let html = `
+    <div class="q-head">
+      <div class="q-num">${L.q_label} ${displayNum}</div>
+      <div class="q-text">${q.text}</div>
+      ${q.sub ? `<div class="q-sub">${q.sub}</div>` : ''}
+    </div>
+    <div class="q-body">`;
+
+  if (q.type === 'single') {
+    q.opts.forEach((o, i) => {
+      const sel = answers[q.id] === i ? 'selected' : '';
+      html += `<div class="opt ${sel}" onclick="selectSingle('${q.id}',${i},this)">
+        <div class="opt-mark"></div><div class="opt-label">${o}</div></div>`;
+    });
+  }
+
+  if (q.type === 'multi') {
+    let lastGroup = -1;
+    q.opts.forEach((o, i) => {
+      // Insert group label if this question has groups
+      if (q.groups && q.groups[i] !== lastGroup) {
+        lastGroup = q.groups[i];
+        const glabel = q.groupLabels ? q.groupLabels[lastGroup] : '';
+        if (glabel) {
+          html += `<div style="padding:8px 20px 4px;font-size:11px;font-weight:600;color:var(--sage);letter-spacing:.08em;text-transform:uppercase;border-top:1px solid var(--stone)">${glabel}</div>`;
+        }
+      }
+      const sel = (answers[q.id] || []).includes(i) ? 'selected' : '';
+      html += `<div class="opt ${sel}" onclick="selectMulti('${q.id}',${i},this,${q.max||99})">
+        <div class="opt-mark square"></div><div class="opt-label">${o}</div></div>`;
+    });
+  }
+
+  if (q.type === 'scale') {
+    const cur = answers[q.id];
+    html += `<div class="scale-wrap">
+      <div class="scale-labels"><span>${q.left}</span><span>${q.right}</span></div>
+      <div class="scale-dots">
+        ${Array.from({length:q.points},(_,i)=>`
+          <div class="scale-dot ${cur===i+1?'selected':''}" onclick="selectScale('${q.id}',${i+1},this)">${i+1}</div>
+        `).join('')}
+      </div></div>`;
+  }
+
+  if (q.type === 'open') {
+    html += `<div class="open-wrap">
+      <textarea id="ta_${q.id}" placeholder="${lang==='ar'?'اكتبي أفكارك هنا…':lang==='ru'?'Напишите ваши мысли здесь…':lang==='en'?'Write your thoughts here…':'在这里写下你的想法…'}"
+        oninput="answers['${q.id}']=this.value">${answers[q.id]||''}</textarea></div>`;
+  }
+
+  if (q.type === 'rank') {
+    if (!rankState[q.id]) rankState[q.id] = {};
+    const rs = rankState[q.id];
+    html += `<div class="rank-wrap">`;
+    q.opts.forEach((o, i) => {
+      const rank = rs[i] !== undefined ? rs[i] : null;
+      html += `<div class="rank-item" id="ri_${q.id}_${i}">
+        <div class="rank-label">${o}</div>
+        <div class="rank-badge ${rank!==null?'show':''}" id="rb_${q.id}_${i}">${rank!==null?rank:''}</div>
+      </div>`;
+    });
+    const usedRanks = Object.values(rs);
+    html += `</div>
+    <div style="padding:8px 20px 16px">
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;" id="rank-btns-${q.id}">
+        ${q.opts.map((_,i)=>{
+          const used = usedRanks.includes(i+1);
+          return `<div style="width:36px;height:36px;border-radius:9px;border:1.5px solid ${used?'var(--clay)':'var(--line)'};
+            background:${used?'var(--clay)':'transparent'};
+            color:${used?'#fff':'var(--text-s)'};font-size:14px;font-weight:500;
+            display:flex;align-items:center;justify-content:center;cursor:pointer;"
+            onclick="assignRank('${q.id}',${i+1})">${i+1}</div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }
+
+  if (q.type === 'grid') {
+    const saved = answers[q.id] || {};
+    html += `<div class="grid-wrap"><table class="grid-table">
+      <thead><tr>
+        <th></th>${q.cols.map(c=>`<th>${c}</th>`).join('')}
+      </tr></thead><tbody>
+      ${q.rows.map((r,ri)=>`<tr>
+        <td>${r}</td>
+        ${q.cols.map((c,ci)=>`<td><div class="grid-dot ${saved[ri]===ci?'selected':''}"
+          onclick="selectGrid('${q.id}',${ri},${ci},this)"></div></td>`).join('')}
+      </tr>`).join('')}
+      </tbody></table></div>`;
+  }
+
+  html += `</div>`;
+  card.innerHTML = html;
+  container.appendChild(card);
+  setTimeout(() => card.classList.add('visible'), 60);
+
+  if (q.type === 'rank') setupRankClick(q.id, q.opts.length);
+
+  updateNav(idx);
+  updateProgress(idx);
+  updateStepInfo(idx);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function getDisplayNum(idx) {
+  let count = 0;
+  const qs = getLang().questions;
+  for (let i = 0; i <= idx; i++) {
+    if (qs[i].type !== 'concept' && qs[i].id !== 'S1') count++;
+  }
+  return count;
+}
+
+// ═══════════════════════════════════════════════
+// ANSWERS
+// ═══════════════════════════════════════════════
+function selectSingle(id, i, el) {
+  answers[id] = i;
+  el.closest('.q-body').querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  updateNextBtn();
+  setTimeout(() => { if (canAdvance()) goNext(); }, 380);
+}
+
+function selectMulti(id, i, el, max) {
+  if (!answers[id]) answers[id] = [];
+  const arr = answers[id];
+  const pos = arr.indexOf(i);
+  if (pos >= 0) { arr.splice(pos,1); el.classList.remove('selected'); }
+  else {
+    if (arr.length >= max) { el.style.opacity='.45'; setTimeout(()=>el.style.opacity='',300); return; }
+    arr.push(i); el.classList.add('selected');
+  }
+  updateNextBtn();
+}
+
+function selectScale(id, v, el) {
+  answers[id] = v;
+  el.closest('.scale-dots').querySelectorAll('.scale-dot').forEach(d => d.classList.remove('selected'));
+  el.classList.add('selected');
+  updateNextBtn();
+  setTimeout(() => { if(canAdvance()) goNext(); }, 400);
+}
+
+function selectGrid(id, row, col, el) {
+  if (!answers[id]) answers[id] = {};
+  answers[id][row] = col;
+  el.closest('tr').querySelectorAll('.grid-dot').forEach(d => d.classList.remove('selected'));
+  el.classList.add('selected');
+  updateNextBtn();
+}
+
+let pendingRank = {};
+function assignRank(id, rankNum) {
+  const rs = rankState[id];
+  const existing = Object.entries(rs).find(([k,v]) => v === rankNum);
+  if (existing) delete rs[existing[0]];
+  pendingRank[id] = rankNum;
+  answers[id] = {...rs};
+  renderQuestion(current);
+}
+
+function setupRankClick(id, count) {
+  for (let i = 0; i < count; i++) {
+    const item = document.getElementById(`ri_${id}_${i}`);
+    if (!item) continue;
+    item.onclick = () => {
+      const rs = rankState[id];
+      const pending = pendingRank[id];
+      if (pending === undefined) return;
+      delete rs[i];
+      rs[i] = pending;
+      delete pendingRank[id];
+      answers[id] = {...rs};
+      renderQuestion(current);
+    };
+  }
+}
+
+// ═══════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════
+function canAdvance() {
+  const q = getQ(current);
+  if (!q.required) return true;
+  if (q.type === 'concept') return true;
+  if (q.type === 'single') return answers[q.id] !== undefined;
+  if (q.type === 'multi') return (answers[q.id]||[]).length > 0;
+  if (q.type === 'scale') return answers[q.id] !== undefined;
+  if (q.type === 'grid') { const s=answers[q.id]||{}; return q.rows.every((_,i)=>s[i]!==undefined); }
+  if (q.type === 'rank') return Object.keys(rankState[q.id]||{}).length > 0;
+  return true;
+}
+
+function updateNextBtn() {
+  const btn = document.getElementById('btn-next');
+  if (!btn) return;
+  const q = getQ(current);
+  const L = getLang();
+  btn.disabled = q.required && !canAdvance();
+  btn.classList.remove('highlight');
+  const isLast = current === TOTAL() - 1;
+  if (isLast) { btn.textContent = L.submit; }
+  else if (!q.required && !canAdvance()) { btn.textContent = L.skip; }
+  else { btn.textContent = L.next; }
+}
+
+function updateNav(idx) {
+  const btnPrev = document.getElementById('btn-prev');
+  if (!btnPrev) return;
+  btnPrev.disabled = idx === 0;
+  // Keep prev label in sync with current language
+  const prevLabel = document.getElementById('prev-label');
+  const prevArrow = document.getElementById('prev-arrow');
+  if (prevLabel) {
+    const isRTL = document.documentElement.dir === 'rtl';
+    prevLabel.textContent = {zh:'上一题',en:'Back',ar:'السابق',ru:'Назад'}[lang] || 'Back';
+    if (prevArrow) prevArrow.textContent = isRTL ? '→' : '←';
+  }
+  updateNextBtn();
+}
+
+function checkShowIf(cond) {
+  if (!cond) return true;
+  const val = answers[cond.qid];
+  return val !== undefined && cond.values.includes(val);
+}
+
+function goNext() {
+  const q = getQ(current);
+  if (q.disqualify && q.disqualify.includes(answers[q.id])) {
+    document.getElementById('survey').style.display = 'none';
+    document.getElementById('nav-bar').classList.add('hidden');
+    document.getElementById('disq-screen').style.display = 'block';
+    document.querySelector('#disq-screen h2').textContent = getLang().disq_title;
+    document.querySelector('#disq-screen p').textContent = getLang().disq_body;
+    return;
+  }
+  if (current === TOTAL() - 1) { submitSurvey(); return; }
+  current++;
+  // Skip questions whose showIf condition is not met
+  while (current < TOTAL() - 1 && !checkShowIf(getQ(current).showIf)) {
+    current++;
+  }
+  renderQuestion(current);
+}
+
+function goPrev() {
+  if (current === 0) return;
+  current--;
+  // Skip back over questions whose showIf condition is not met
+  while (current > 0 && !checkShowIf(getQ(current).showIf)) {
+    current--;
+  }
+  renderQuestion(current);
+}
+
+function updateProgress(idx) {
+  document.getElementById('prog-bar').style.width = Math.round((idx / TOTAL()) * 100) + '%';
+}
+
+function updateStepInfo(idx) {
+  const L = getLang();
+  const q = getQ(idx);
+  const visibleTotal = L.questions.filter(q => q.type !== 'concept' && q.id !== 'S1').length;
+  let count = 0;
+  for (let i = 0; i <= idx; i++) {
+    if (L.questions[i].type !== 'concept' && L.questions[i].id !== 'S1') count++;
+  }
+  const info = document.getElementById('step-info');
+  if (info) info.textContent = q.type === 'concept' ? L.read_concept : `${count} ${L.of} ${visibleTotal}`;
+}
+
+// ═══════════════════════════════════════════════
+// SUBMIT
+// ═══════════════════════════════════════════════
+async function submitSurvey() {
+  const L = getLang();
+
+  // Show submitting state
+  const btnNext = document.getElementById('btn-next');
+  if (btnNext) {
+    btnNext.disabled = true;
+    btnNext.textContent = {zh:'提交中…',en:'Submitting…',ar:'جارٍ الإرسال…',ru:'Отправка…'}[lang] || 'Submitting…';
+  }
+
+  // POST to backend
+  try {
+    const res = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lang, answers })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+  } catch (err) {
+    console.error('Submit failed:', err);
+  }
+
+  // Show end screen
+  document.getElementById('survey').style.display = 'none';
+  document.getElementById('nav-bar').classList.add('hidden');
+  document.getElementById('prog-bar').style.width = '100%';
+
+  const end = document.getElementById('end-screen');
+  end.style.display = 'block';
+  end.querySelector('h2').textContent = L.end_title;
+  end.querySelector('p').textContent = L.end_body;
+
+  const q19 = answers['Q19'];
+  const q22 = answers['Q22'];
+  const q24 = answers['Q24'];
+  const q22text = q22 !== undefined ? L.questions.find(q=>q.id==='Q22').opts[q22] : '—';
+  const q24text = q24 !== undefined ? L.questions.find(q=>q.id==='Q24').opts[q24] : '—';
+
+  document.getElementById('summary-box').innerHTML = `
+    <p>📍 <span>${L.end_interest}：${q19 ? q19 + ' / 5' : '—'}</span></p>
+    <p>💰 <span>${L.end_price}：${q22text}</span></p>
+    <p>🤝 <span>${L.end_followup}：${q24text}</span></p>
+    <p style="margin-top:8px;font-size:11px;color:#bbb">${L.end_recorded}</p>`;
+
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Init
+setLang('zh');
+</script>
+</body>
+</html>
